@@ -4,15 +4,15 @@ import path from 'path';
 // in case you run into any typescript error when configuring `devServer`
 import 'webpack-dev-server';
 
-import { getEntry, setHTMLPlugins } from './webpack.plugin';
+import { entry, setHTMLPlugins } from './webpack.plugin';
 
 const resolve = (p: string) => path.resolve(__dirname, p);
 
 const config: Webpack.Configuration = {
     mode: 'development',
-    entry: getEntry(),
+    entry,
     output: {
-        path: resolve('./dist'),
+        path: resolve('dist'),
         filename: 'js/[name].[fullhash:8].js',
         clean: true,
     },

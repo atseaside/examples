@@ -1,31 +1,38 @@
-import fs from 'fs';
 import path from 'path';
+import glob from 'glob';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-const multiplePagesEntry = path.resolve(__dirname, './src/pages');
-const multiplePagesDir = fs.readdirSync(multiplePagesEntry);
+const resolve = (p: string) => path.resolve(__dirname, p);
 
-if (multiplePagesDir?.length < 1) {
-    throw new Error('无入口文件，请检查src/pages文件夹');
+class GenerateWebpackEntry {
+    dirnameArr: string[] = [];
+    entry: { [key: string]: string } = {};
+    constructor() {
+        this.init();
+    }
+    init() {
+        glob.sync('./src/pages/**/index.ts').forEach((n) => {
+            const reg = /\.\/src\/pages\/(.+)\/index.ts/;
+            const dirname = n.replace(reg, '$1');
+            this.dirnameArr.push(dirname);
+            this.entry = { ...this.entry, [dirname]: n };
+        }, {});
+    }
 }
 
-export const getEntry = () =>
-    multiplePagesDir.reduce(
-        (o: { [key: string]: string }, n) => ({
-            ...o,
-            ...{ [n]: `${multiplePagesEntry}/${n}/index.js` },
-        }),
-        {}
-    );
+const webpackEntry = new GenerateWebpackEntry();
+
+export const entry = webpackEntry.entry;
 
 export const setHTMLPlugins = () => {
-    return multiplePagesDir.reduce(
-        (arr: HtmlWebpackPlugin[], item: string) => [
+    return webpackEntry.dirnameArr.reduce(
+        (arr: HtmlWebpackPlugin[], dirname: string) => [
             ...arr,
             new HtmlWebpackPlugin({
-                template: `./src/pages/${item}/index.html`,
-                chunks: [item],
-                filename: `${item}.html`,
+                favicon: resolve('src/assets/favicon.ico'),
+                template: resolve(`src/pages/${dirname}/index.html`),
+                chunks: [dirname],
+                filename: `${dirname}.html`,
             }),
         ],
         []
