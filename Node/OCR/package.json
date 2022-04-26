@@ -1,0 +1,10 @@
+{
+  "name": "OCR",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "yao",
+  "license": "MIT",
+  "dependencies": {
+    "tencentcloud-sdk-nodejs": "^4.0.331"
+  }
+}
