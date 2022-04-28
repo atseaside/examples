@@ -34,7 +34,8 @@
         "antd": "^4.20.0",
         "electron-squirrel-startup": "^1.0.0",
         "react": "^18.0.0",
-        "react-dom": "^18.0.0"
+        "react-dom": "^18.0.0",
+        "tencentcloud-sdk-nodejs": "^4.0.331"
     },
     "config": {
         "forge": {
